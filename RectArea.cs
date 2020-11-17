@@ -204,6 +204,7 @@ public class RectArea : MonoBehaviour
                     ball.transform.SetParent(ps.agentScript.gameObject.transform);
                     ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
                     ps.agentScript.isServing = true;
+                    
                 }
                 else
                 {
