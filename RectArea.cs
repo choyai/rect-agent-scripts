@@ -266,6 +266,5 @@ public class RectArea : MonoBehaviour
     }
     public void Hit( RectAgent agent )
     {
-		
     }
 }
