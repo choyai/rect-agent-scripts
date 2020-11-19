@@ -216,8 +216,21 @@ public class RectArea : MonoBehaviour
                 ps.isServing = false;
             }
         }
+        //  if the ball was never reset
+        //  and there was no valid agent serving
         if( ball.transform.parent == this.transform )
         {
+            // the serving agent is a the first agent in the scoring team
+            foreach ( var ps in playerStates )
+            {
+                if( ps.agentScript.team == prevScoredTeam )
+                {
+                    ball.transform.SetParent(ps.agentScript.gameObject.transform);
+                    ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
+                    ps.agentScript.isServing = true;
+                    break;
+                }
+            }
             Debug.Log("fuck");
         }
         ballRb.angularVelocity = Vector3.zero;
