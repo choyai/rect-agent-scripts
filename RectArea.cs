@@ -236,7 +236,6 @@ public class RectArea : MonoBehaviour
         ballRb.angularVelocity = Vector3.zero;
         ballRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
         this.phase = GamePhase.Start;
-
     }
 
     public ref int GetPlayerTurnByTeam( RectAgent.RectTeam team )
