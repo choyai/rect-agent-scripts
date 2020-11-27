@@ -240,6 +240,7 @@ public class RectArea : MonoBehaviour
 
     public ref int GetPlayerTurnByTeam( RectAgent.RectTeam team )
     {
+        
         switch ( team )
         {
             case RectAgent.RectTeam.Blue:
