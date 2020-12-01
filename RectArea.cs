@@ -278,7 +278,18 @@ public class RectArea : MonoBehaviour
             this.phase = GamePhase.Play;
         }
     }
+
+    // An agent takes a hit action if the ball is within range
     public void Hit( RectAgent agent )
     {
+        // if the ball is within range
+        Vector3 direction = ball.transform.position - agent.transform.position;
+        distance = direction.magnitude();
+        if( distance < 0.7f )
+        {
+            // calculate the hit direction
+            direction = direction.normalize();
+            ballRb.addForce( 10f * direction, ForceMode.Impulse );
+        }
     }
 }
