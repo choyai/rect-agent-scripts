@@ -67,12 +67,12 @@ public class BallController : MonoBehaviour
         {
             if (col.gameObject.CompareTag(yellowGoalTag)) //ball touched yellow goal
             {
-                Debug.Log("blue stay");
+                //Debug.Log("blue stay");
                 area.GoalTouched(RectAgent.RectTeam.Blue);
             }
             else if (col.gameObject.CompareTag(blueGoalTag)) //ball touched blue goal
             {
-                Debug.Log("yellow stay");
+                //Debug.Log("yellow stay");
                 area.GoalTouched(RectAgent.RectTeam.Yellow);
             }
             else if (col.gameObject.CompareTag("Blue"))

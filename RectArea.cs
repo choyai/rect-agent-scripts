@@ -198,9 +198,9 @@ public class RectArea : MonoBehaviour
                 ref int playerTurn = ref this.GetPlayerTurnByTeam( ps.agentScript.team );
                 if( ps.playerIndex == playerTurn)
                 {
-                    Debug.Log("player name :" + ps.agentScript.gameObject.name );
-                    Debug.Log("player index :" + ps.playerIndex );
-                    Debug.Log("player turn: "  + playerTurn );
+                    //Debug.Log("player name :" + ps.agentScript.gameObject.name );
+                    //Debug.Log("player index :" + ps.playerIndex );
+                    //Debug.Log("player turn: "  + playerTurn );
                     ball.transform.SetParent(ps.agentScript.gameObject.transform);
                     ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
                     ps.agentScript.isServing = true;
@@ -231,7 +231,7 @@ public class RectArea : MonoBehaviour
                     break;
                 }
             }
-            Debug.Log("fuck");
+            //Debug.Log("fuck");
         }
         ballRb.angularVelocity = Vector3.zero;
         ballRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
@@ -266,10 +266,10 @@ public class RectArea : MonoBehaviour
             ballRb.constraints = RigidbodyConstraints.None;
             ballRb.useGravity = true;
             Vector3 localVelocity = new Vector3(20f, 0.0001f, 0f);
-            Debug.Log("team = " + agent.team.ToString() );
-            Debug.Log("localVelocity = " + localVelocity.ToString() );
+            //Debug.Log("team = " + agent.team.ToString() );
+            //Debug.Log("localVelocity = " + localVelocity.ToString() );
             Vector3 worldVelocity = agent.transform.TransformVector(localVelocity);
-            Debug.Log(" world velocity " + worldVelocity.ToString() );
+            //Debug.Log(" world velocity " + worldVelocity.ToString() );
             ballRb.velocity = worldVelocity;
             
             ball.transform.SetParent( this.transform, true );
