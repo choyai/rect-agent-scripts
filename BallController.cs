@@ -58,6 +58,10 @@ public class BallController : MonoBehaviour
         {
             area.prevTouchedTeam = RectAgent.RectTeam.Yellow;
         }
+        else if (col.gameObject.CompareTag("Wall"))
+        {
+            area.OutOfBounds( area.prevTouchedTeam );
+        }
     }
     void OnCollisionStay(Collision col)
     {
