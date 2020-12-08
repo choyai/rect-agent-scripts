@@ -52,8 +52,8 @@ public class RectAgent : Agent
             m_Transform = new Vector3(transform.position.x, 1f, transform.position.z);
         }
 
-        m_LateralSpeed = 1.0f;
-        m_ForwardSpeed = 1.0f;
+        m_LateralSpeed = 2.0f;
+        m_ForwardSpeed = 2.0f;
         m_Settings = FindObjectOfType<RectSettings>();
         agentRb = GetComponent<Rigidbody>();
         agentRb.maxAngularVelocity = 500;

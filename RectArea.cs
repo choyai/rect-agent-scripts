@@ -265,7 +265,7 @@ public class RectArea : MonoBehaviour
             ballRb.WakeUp();
             ballRb.constraints = RigidbodyConstraints.None;
             ballRb.useGravity = true;
-            Vector3 localVelocity = new Vector3(25f, 3f, 0f);
+            Vector3 localVelocity = new Vector3(40f, 3f, 0f);
             //Debug.Log("team = " + agent.team.ToString() );
             //Debug.Log("localVelocity = " + localVelocity.ToString() );
             Vector3 worldVelocity = agent.transform.TransformVector(localVelocity);
@@ -287,6 +287,7 @@ public class RectArea : MonoBehaviour
         var distance = direction.magnitude;
         if( distance < 0.7f )
         {
+            Debug.Log("hitting");
             // calculate the hit direction
             direction.Normalize();
             ballRb.AddForce( 30f * direction, ForceMode.Impulse );

@@ -52,6 +52,7 @@ public class BallController : MonoBehaviour
         }
         else if (col.gameObject.CompareTag("Blue"))
         {
+            
             area.prevTouchedTeam = RectAgent.RectTeam.Blue;
         }
         else if (col.gameObject.CompareTag("Yellow"))
