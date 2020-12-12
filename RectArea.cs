@@ -265,7 +265,10 @@ public class RectArea : MonoBehaviour
             ballRb.WakeUp();
             ballRb.constraints = RigidbodyConstraints.None;
             ballRb.useGravity = true;
-            Vector3 localVelocity = new Vector3(27f, 3f, 0f);
+
+            //  may need to determine the pitch angle of the ball via input, as gameplay is too hard otherwise...
+
+            Vector3 localVelocity = new Vector3(22f, 3f, 0f);
             //Debug.Log("team = " + agent.team.ToString() );
             //Debug.Log("localVelocity = " + localVelocity.ToString() );
             Vector3 worldVelocity = agent.transform.TransformVector(localVelocity);
