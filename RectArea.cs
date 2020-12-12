@@ -287,7 +287,7 @@ public class RectArea : MonoBehaviour
         var distance = direction.magnitude;
         if( distance < 0.7f )
         {
-            Debug.Log("hitting");
+            //Debug.Log("hitting");
             // calculate the hit direction
             direction.Normalize();
             ballRb.AddForce( 30f * direction, ForceMode.Impulse );

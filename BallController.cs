@@ -40,7 +40,7 @@ public class BallController : MonoBehaviour
     }
     void OnCollisionEnter(Collision col)
     {
-        Debug.Log("entrer");
+        //Debug.Log("entrer");
         
         if (col.gameObject.CompareTag(yellowGoalTag)) //ball touched yellow goal
         {
@@ -61,7 +61,7 @@ public class BallController : MonoBehaviour
         }
         else if (col.gameObject.CompareTag("Wall"))
         {
-            Debug.Log("wall");
+            //Debug.Log("wall");
             area.OutOfBounds( area.prevTouchedTeam );
             
         }
@@ -116,7 +116,7 @@ public class BallController : MonoBehaviour
         }
         else if( col.gameObject.CompareTag("Wall"))
         {
-            Debug.Log("wallex");
+            //Debug.Log("wallex");
             area.OutOfBounds(area.prevTouchedTeam);
         }
     }
