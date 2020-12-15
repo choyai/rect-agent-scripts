@@ -123,7 +123,7 @@ public class RectAgent : Agent
                 {
                     area.Service( this );
                 } 
-                else
+                else if( area.phase == RectArea.GamePhase.Play )
                 {
                     area.Hit( this );
                 }

@@ -288,9 +288,10 @@ public class RectArea : MonoBehaviour
         // if the ball is within range
         Vector3 direction = ball.transform.position - agent.transform.position;
         var distance = direction.magnitude;
-        if( distance < 0.7f )
+        // Debug.Log(distance);
+        if( distance < 2f )
         {
-            //Debug.Log("hitting");
+            // Debug.Log("hitting");
             // calculate the hit direction
             direction.Normalize();
             ballRb.AddForce( 30f * direction, ForceMode.Impulse );
