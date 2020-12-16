@@ -228,7 +228,7 @@ public class RectArea : MonoBehaviour
 
         // currently it is random who gets to serve the code below doesn't work.
         int turn = randall.Next(4);
-        Debug.Log(turn);
+        // Debug.Log(turn);
         for( int count = 0; count < 4; count++ )
         {
             var ps = playerStates[count];
