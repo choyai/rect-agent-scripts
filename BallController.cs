@@ -32,8 +32,8 @@ public class BallController : MonoBehaviour
         }
 
         // Check the position for out of bounds
-        if ( Mathf.Abs(transform.localPosition.x) > 5 ||
-             Mathf.Abs(transform.localPosition.z) > 10 )
+        if ( Mathf.Abs(transform.localPosition.x) > 15 ||
+             Mathf.Abs(transform.localPosition.z) > 20 )
         {
             area.OutOfBounds(area.prevTouchedTeam);
         }
@@ -59,7 +59,7 @@ public class BallController : MonoBehaviour
         {
             area.prevTouchedTeam = RectAgent.RectTeam.Yellow;
         }
-        else if (col.gameObject.CompareTag("Wall"))
+        else if (col.gameObject.CompareTag("Wall") || col.gameObject.CompareTag("Net"))
         {
             //Debug.Log("wall");
             area.OutOfBounds( area.prevTouchedTeam );
@@ -114,7 +114,7 @@ public class BallController : MonoBehaviour
         {
             area.prevTouchedTeam = RectAgent.RectTeam.Yellow;
         }
-        else if( col.gameObject.CompareTag("Wall"))
+        else if( col.gameObject.CompareTag("Wall") || col.gameObject.CompareTag("Net"))
         {
             //Debug.Log("wallex");
             area.OutOfBounds(area.prevTouchedTeam);

@@ -34,6 +34,8 @@ public class RectAgent : Agent
     BehaviorParameters m_BehaviorParameters;
     Vector3 m_Transform;
 
+    public GameObject contactPoint;
+
     EnvironmentParameters m_ResetParams;
 
     public override void Initialize()
@@ -69,6 +71,17 @@ public class RectAgent : Agent
         playerState.playerIndex = m_PlayerIndex;
 
         m_ResetParams = Academy.Instance.EnvironmentParameters;
+    }
+
+    void Update()
+    {
+        // Check the position for out of bounds
+        if ( Mathf.Abs(transform.localPosition.x) > 15 ||
+             Mathf.Abs(transform.localPosition.z) > 20 )
+        {
+            // area.OutOfBounds(this.team);
+            
+        }
     }
 
     public void MoveAgent(float[] act)
@@ -192,6 +205,7 @@ public class RectAgent : Agent
             var dir = c.contacts[0].point - transform.position;
             dir = dir.normalized;
             c.gameObject.GetComponent<Rigidbody>().AddForce(dir * force);
+            // Debug.Log("kicked");
         }
     }
 

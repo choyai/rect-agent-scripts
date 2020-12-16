@@ -41,12 +41,18 @@ public class RectArea : MonoBehaviour
     public int yellowPlayerTurn;
     public Vector3 ballVelocity;
 
+    float serviceCooldown = 0.7f;
+    bool recentlyServed = false;
+
+
+
     RectAgent.RectTeam prevScoredTeam;
 
     public RectAgent.RectTeam prevTouchedTeam;
 
     EnvironmentParameters m_ResetParams;
 
+    public int blueScore, yellowScore;
 
     public float motionTimer = 0f;
     public bool timerRunning = false;
@@ -75,6 +81,12 @@ public class RectArea : MonoBehaviour
         {
             timerRunning = true;
         }
+        foreach (var ps in playerStates)
+        {
+            Vector3 direction = ballRb.transform.position - ps.agentRb.transform.position;
+            direction.Normalize();
+            ps.agentScript.contactPoint.transform.position = 2f * direction + ps.agentRb.transform.position;
+        }
     }
 
     void Awake()
@@ -93,6 +105,8 @@ public class RectArea : MonoBehaviour
         prevTouchedTeam = prevScoredTeam;
         bluePlayerTurn = 0;
         yellowPlayerTurn = 0;
+        blueScore = 0;
+        yellowScore = 0;
         m_ResetParams = Academy.Instance.EnvironmentParameters;
 
         ballRb.velocity = new Vector3(0f, 0f, 0f);
@@ -136,6 +150,13 @@ public class RectArea : MonoBehaviour
 
     }
 
+    public IEnumerator serviceCooldownTimer()
+    {
+        recentlyServed = true;
+        yield return new WaitForSeconds(serviceCooldown);
+        recentlyServed = false;
+    }
+
     IEnumerator ShowGoalUI()
     {
         if (goalTextUI) goalTextUI.SetActive(true);
@@ -146,6 +167,14 @@ public class RectArea : MonoBehaviour
     public void GoalTouched(RectAgent.RectTeam scoredTeam)
     {
         GiveReward(scoredTeam);
+        if( scoredTeam == RectAgent.RectTeam.Blue )
+        {
+            blueScore++;
+        }
+        else
+        {
+            yellowScore++;
+        }
     }
 
     // calculate who fouled
@@ -154,10 +183,12 @@ public class RectArea : MonoBehaviour
         if( fouledTeam == RectAgent.RectTeam.Blue)
         {
             GiveReward(RectAgent.RectTeam.Yellow);
+            yellowScore++;
         }
         else
         {
             GiveReward(RectAgent.RectTeam.Blue);
+            blueScore++;
         }
     }
 
@@ -182,6 +213,9 @@ public class RectArea : MonoBehaviour
 
     public void ResetBall()
     {
+        // // print scores
+        // Debug.Log("Blue: " + blueScore.ToString());
+        // Debug.Log("Yellow: " + yellowScore.ToString());
         
         ballRb.velocity = new Vector3(0f, 0f, 0f);
         ballRb.useGravity = false;
@@ -236,6 +270,7 @@ public class RectArea : MonoBehaviour
         ballRb.angularVelocity = Vector3.zero;
         ballRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
         this.phase = GamePhase.Start;
+
     }
 
     public ref int GetPlayerTurnByTeam( RectAgent.RectTeam team )
@@ -268,7 +303,7 @@ public class RectArea : MonoBehaviour
 
             //  may need to determine the pitch angle of the ball via input, as gameplay is too hard otherwise...
 
-            Vector3 localVelocity = new Vector3(22f, 3f, 0f);
+            Vector3 localVelocity = new Vector3(15f, 10f, 0f);
             //Debug.Log("team = " + agent.team.ToString() );
             //Debug.Log("localVelocity = " + localVelocity.ToString() );
             Vector3 worldVelocity = agent.transform.TransformVector(localVelocity);
@@ -279,6 +314,8 @@ public class RectArea : MonoBehaviour
             playerTurn = ( playerTurn == 0) ? 1 : 0;
             agent.isServing = false;
             this.phase = GamePhase.Play;
+            prevTouchedTeam = agent.team;
+            StartCoroutine( serviceCooldownTimer() );
         }
     }
 
@@ -289,12 +326,14 @@ public class RectArea : MonoBehaviour
         Vector3 direction = ball.transform.position - agent.transform.position;
         var distance = direction.magnitude;
         // Debug.Log(distance);
-        if( distance < 2f )
+        if( distance < 2f && !recentlyServed)
         {
             // Debug.Log("hitting");
             // calculate the hit direction
             direction.Normalize();
-            ballRb.AddForce( 30f * direction, ForceMode.Impulse );
+            ballRb.velocity = 18f * direction;
+            prevTouchedTeam = agent.team;
+            // Debug.Log(30f * direction);
         }
     }
 }
