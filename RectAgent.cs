@@ -23,6 +23,7 @@ public class RectAgent : Agent
 
     const float k_Power = 2000f;
     float m_ExistentialReward;
+    float m_OutOfBoundsReward;
     float m_LateralSpeed;
     float m_ForwardSpeed;
 
@@ -49,6 +50,7 @@ public class RectAgent : Agent
     {
         // fuck you mlagents team
         m_ExistentialReward = 1f / 1000000f;
+        m_OutOfBoundsReward = 1f / 10000f;
         m_BehaviorParameters = gameObject.GetComponent<BehaviorParameters>();
         if (m_BehaviorParameters.TeamId == (int)RectTeam.Blue)
         {
@@ -88,6 +90,20 @@ public class RectAgent : Agent
         {
             area.OutOfBounds(this.team);
 
+        }
+
+        if( Mathf.Abs(transform.localPosition.x) > 5f ||
+            Mathf.Abs(transform.localPosition.z) > 10f )
+        {
+            m_OutOfBoundsReward = 0f;
+            if( Mathf.Abs(transform.localPosition.x) > 5f)
+            {
+                m_OutOfBoundsReward +=  0.001f * ( Mathf.Abs(transform.localPosition.x) - 5f);
+            }
+            if( Mathf.Abs(transform.localPosition.z) > 10f)
+            {
+                m_OutOfBoundsReward += 0.001f * ( Mathf.Abs(transform.localPosition.z) - 10f);
+            }
         }
     }
 
@@ -188,6 +204,8 @@ public class RectAgent : Agent
 
         // Existential penalty cumulant for Generic
         timePenalty -= m_ExistentialReward;
+        timePenalty -= m_OutOfBoundsReward;
+        
 
         MoveAgent(vectorAction);
     }
