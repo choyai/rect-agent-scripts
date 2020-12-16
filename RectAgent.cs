@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Policies;
+using Unity.MLAgents.Sensors;
 
 public class RectAgent : Agent
 {
@@ -33,6 +34,12 @@ public class RectAgent : Agent
     RectSettings m_Settings;
     BehaviorParameters m_BehaviorParameters;
     Vector3 m_Transform;
+
+    // Agent gameobjects for sensor data
+
+    public GameObject friendlyAgent;
+    public GameObject enemyAgent1;
+    public GameObject enemyAgent2;
 
     public GameObject contactPoint;
 
@@ -79,9 +86,37 @@ public class RectAgent : Agent
         if ( Mathf.Abs(transform.localPosition.x) > 15 ||
              Mathf.Abs(transform.localPosition.z) > 20 )
         {
-            // area.OutOfBounds(this.team);
-            
+            area.OutOfBounds(this.team);
+
         }
+    }
+
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        // ball position relative to agent
+        sensor.AddObservation( area.ballRb.position - this.transform.position );
+        
+        // net position relative to agent
+        sensor.AddObservation( this.transform.parent.position - this.transform.position );
+
+        // agent y rotation ( depends on team )
+        Quaternion inputRotation = this.transform.localRotation;
+        if ( team == RectTeam.Blue){
+            inputRotation *= Quaternion.Euler(0, 180, 0);
+        }
+        sensor.AddObservation( inputRotation );
+
+        // friendlyAgent position
+        sensor.AddObservation( friendlyAgent.transform.position.x - this.transform.position.x );
+        sensor.AddObservation( friendlyAgent.transform.position.z - this.transform.position.z );
+
+        // enemyAgent1 position
+        sensor.AddObservation( enemyAgent1.transform.position.x - this.transform.position.x );
+        sensor.AddObservation( enemyAgent1.transform.position.z - this.transform.position.z );
+
+        // enemyAgent2 position
+        sensor.AddObservation( enemyAgent2.transform.position.x - this.transform.position.x );
+        sensor.AddObservation( enemyAgent2.transform.position.z - this.transform.position.z );
     }
 
     public void MoveAgent(float[] act)

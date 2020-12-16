@@ -18,16 +18,32 @@ public class BallController : MonoBehaviour
         // Check the position in case the collision bugs out
         if (transform.position.y < (transform.localScale.y / 2f)  + 0.1f)
         {
-            // check whether we are on the yellow side or blue side
-            if (transform.localPosition.z > 0)
+            // TODO: make this not ugly
+            //  case that the x is in court
+            if( Mathf.Abs(transform.localPosition.x) < 5f)
             {
-                // yellow scores
-                area.GoalTouched(RectAgent.RectTeam.Yellow);
+                // check whether we are on the yellow side or blue side
+                if (transform.localPosition.z > 0f && transform.localPosition.z < 10f )
+                {
+                    // yellow scores
+                        area.GoalTouched(RectAgent.RectTeam.Yellow);
+                }
+                else if (transform.localPosition.z < 0f && transform.localPosition.z > -10f)
+                {
+                    // blue scores
+                    area.GoalTouched(RectAgent.RectTeam.Blue);
+                }
+                else
+                {
+                    //oob
+                    area.OutOfBounds(area.prevTouchedTeam);
+                }
+                
             }
-            else if (transform.localPosition.z < 0)
+            else
             {
-                // blue scores
-                area.GoalTouched(RectAgent.RectTeam.Blue);
+                // oob
+                area.OutOfBounds(area.prevTouchedTeam);
             }
         }
 

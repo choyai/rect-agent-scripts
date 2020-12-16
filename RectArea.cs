@@ -44,7 +44,7 @@ public class RectArea : MonoBehaviour
     float serviceCooldown = 0.7f;
     bool recentlyServed = false;
 
-
+    System.Random randall = new System.Random();
 
     RectAgent.RectTeam prevScoredTeam;
 
@@ -225,33 +225,52 @@ public class RectArea : MonoBehaviour
         // The ball resets towards whichever team scored
         // ballRb.velocity = new Vector3( 0f, 0f, 1f * (1f - (float)scoredTeam) - 1f * (float)scoredTeam );
 
-        foreach (var ps in playerStates)
+
+        // currently it is random who gets to serve the code below doesn't work.
+        int turn = randall.Next(4);
+        Debug.Log(turn);
+        for( int count = 0; count < 4; count++ )
         {
-            if(ps.agentScript.team == prevScoredTeam)
+            var ps = playerStates[count];
+            if( count == turn )
             {
-                ref int playerTurn = ref this.GetPlayerTurnByTeam( ps.agentScript.team );
-                if( ps.playerIndex == playerTurn)
-                {
-                    //Debug.Log("player name :" + ps.agentScript.gameObject.name );
-                    //Debug.Log("player index :" + ps.playerIndex );
-                    //Debug.Log("player turn: "  + playerTurn );
-                    ball.transform.SetParent(ps.agentScript.gameObject.transform);
-                    ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
-                    ps.agentScript.isServing = true;
-                    
-                }
-                else
-                {
-                    ps.isServing = false;
-                }
+                ball.transform.SetParent(ps.agentScript.gameObject.transform);
+                ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
+                ps.agentScript.isServing = true;
             }
             else
             {
                 ps.isServing = false;
+                count++;
             }
         }
-        //  if the ball was never reset
-        //  and there was no valid agent serving
+        // foreach (var ps in playerStates)
+        // {
+        //     if(ps.agentScript.team == prevScoredTeam)
+        //     {
+        //         ref int playerTurn = ref this.GetPlayerTurnByTeam( ps.agentScript.team );
+        //         if( ps.playerIndex == playerTurn)
+        //         {
+        //             //Debug.Log("player name :" + ps.agentScript.gameObject.name );
+        //             //Debug.Log("player index :" + ps.playerIndex );
+        //             //Debug.Log("player turn: "  + playerTurn );
+        //             ball.transform.SetParent(ps.agentScript.gameObject.transform);
+        //             ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
+        //             ps.agentScript.isServing = true;
+                    
+        //         }
+        //         else
+        //         {
+        //             ps.isServing = false;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         ps.isServing = false;
+        //     }
+        // }
+        // //  if the ball was never reset
+        // //  and there was no valid agent serving
         if( ball.transform.parent == this.transform )
         {
             // the serving agent is a the first agent in the scoring team
@@ -265,7 +284,7 @@ public class RectArea : MonoBehaviour
                     break;
                 }
             }
-            //Debug.Log("fuck");
+            // Debug.Log("fuck");
         }
         ballRb.angularVelocity = Vector3.zero;
         ballRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
