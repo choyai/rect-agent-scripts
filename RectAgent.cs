@@ -119,7 +119,7 @@ public class RectAgent : Agent
         {
             ballPosition = area.ball.transform.localPosition - this.transform.localPosition;
         }
-        Debug.Log("ballPosition for " + this.gameObject.name + " is " + ballPosition.ToString());
+        // Debug.Log("ballPosition for " + this.gameObject.name + " is " + ballPosition.ToString());
         sensor.AddObservation( ballPosition );
         
         // net position relative to agent
