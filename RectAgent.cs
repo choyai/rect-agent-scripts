@@ -110,14 +110,25 @@ public class RectAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // ball position relative to agent
-        sensor.AddObservation( area.ballRb.position - this.transform.position );
+        Vector3 ballPosition;
+        if(area.phase == RectArea.GamePhase.Start && this.isServing )
+        {
+            ballPosition = area.ball.transform.localPosition;
+        }
+        else
+        {
+            ballPosition = area.ball.transform.localPosition - this.transform.localPosition;
+        }
+        Debug.Log("ballPosition for " + this.gameObject.name + " is " + ballPosition.ToString());
+        sensor.AddObservation( ballPosition );
         
         // net position relative to agent
         sensor.AddObservation( this.transform.parent.position - this.transform.position );
 
         // agent y rotation ( depends on team )
         Quaternion inputRotation = this.transform.localRotation;
-        if ( team == RectTeam.Blue){
+        if ( team == RectTeam.Blue)
+        {
             inputRotation *= Quaternion.Euler(0, 180, 0);
         }
         sensor.AddObservation( inputRotation );
@@ -203,7 +214,7 @@ public class RectAgent : Agent
     {
 
         // Existential penalty cumulant for Generic
-        timePenalty -= m_ExistentialReward;
+        // timePenalty -= m_ExistentialReward;
         timePenalty -= m_OutOfBoundsReward;
         
 

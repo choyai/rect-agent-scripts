@@ -196,14 +196,17 @@ public class RectArea : MonoBehaviour
     {
         foreach (var ps in playerStates)
         {
+            var reward = 0f;
             if (ps.agentScript.team == scoredTeam)
             {
-                ps.agentScript.AddReward(1 + ps.agentScript.timePenalty);
+                reward = 1 + ps.agentScript.timePenalty;
             }
             else
             {
-                ps.agentScript.AddReward(-1);
+                reward = Mathf.Clamp(-0.5f + ps.agentScript.timePenalty, -1, 0);
             }
+            ps.agentScript.AddReward(reward);
+            // Debug.Log("Reward = " + reward.ToString());
             ps.agentScript.EndEpisode();  //all agents need to be reset
         }
         // set prevScoredTeam, prevTouchedTeam
@@ -229,48 +232,48 @@ public class RectArea : MonoBehaviour
         // currently it is random who gets to serve the code below doesn't work.
         int turn = randall.Next(4);
         // Debug.Log(turn);
-        for( int count = 0; count < 4; count++ )
-        {
-            var ps = playerStates[count];
-            if( count == turn )
-            {
-                ball.transform.SetParent(ps.agentScript.gameObject.transform);
-                ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
-                ps.agentScript.isServing = true;
-            }
-            else
-            {
-                ps.isServing = false;
-                count++;
-            }
-        }
-        // foreach (var ps in playerStates)
+        // for( int count = 0; count < 4; count++ )
         // {
-        //     if(ps.agentScript.team == prevScoredTeam)
+        //     var ps = playerStates[count];
+        //     if( count == turn )
         //     {
-        //         ref int playerTurn = ref this.GetPlayerTurnByTeam( ps.agentScript.team );
-        //         if( ps.playerIndex == playerTurn)
-        //         {
-        //             //Debug.Log("player name :" + ps.agentScript.gameObject.name );
-        //             //Debug.Log("player index :" + ps.playerIndex );
-        //             //Debug.Log("player turn: "  + playerTurn );
-        //             ball.transform.SetParent(ps.agentScript.gameObject.transform);
-        //             ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
-        //             ps.agentScript.isServing = true;
-                    
-        //         }
-        //         else
-        //         {
-        //             ps.isServing = false;
-        //         }
+        //         ball.transform.SetParent(ps.agentScript.gameObject.transform);
+        //         ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
+        //         ps.agentScript.isServing = true;
         //     }
         //     else
         //     {
         //         ps.isServing = false;
+        //         count++;
         //     }
         // }
-        // //  if the ball was never reset
-        // //  and there was no valid agent serving
+        foreach (var ps in playerStates)
+        {
+            if(ps.agentScript.team == prevScoredTeam)
+            {
+                ref int playerTurn = ref this.GetPlayerTurnByTeam( ps.agentScript.team );
+                if( ps.playerIndex == playerTurn)
+                {
+                    //Debug.Log("player name :" + ps.agentScript.gameObject.name );
+                    //Debug.Log("player index :" + ps.playerIndex );
+                    //Debug.Log("player turn: "  + playerTurn );
+                    ball.transform.SetParent(ps.agentScript.gameObject.transform);
+                    ball.transform.localPosition = new Vector3(1f, 0.0f, 0f);
+                    ps.agentScript.isServing = true;
+                    
+                }
+                else
+                {
+                    ps.isServing = false;
+                }
+            }
+            else
+            {
+                ps.isServing = false;
+            }
+        }
+        //  if the ball was never reset
+        //  and there was no valid agent serving
         if( ball.transform.parent == this.transform )
         {
             // the serving agent is a the first agent in the scoring team
