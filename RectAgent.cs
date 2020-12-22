@@ -118,6 +118,10 @@ public class RectAgent : Agent
         else
         {
             ballPosition = area.ball.transform.localPosition - this.transform.localPosition;
+            if( team == RectTeam.Blue 
+            {
+                ballPosition.z = -ballPosition.z;
+            }
         }
         // Debug.Log("ballPosition for " + this.gameObject.name + " is " + ballPosition.ToString());
         sensor.AddObservation( ballPosition );
