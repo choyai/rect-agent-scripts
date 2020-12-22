@@ -111,43 +111,44 @@ public class RectAgent : Agent
     {
         // ball position relative to agent
         Vector3 ballPosition;
+
         if(area.phase == RectArea.GamePhase.Start && this.isServing )
         {
             ballPosition = area.ball.transform.localPosition;
         }
         else
         {
-            ballPosition = area.ball.transform.localPosition - this.transform.localPosition;
-            if( team == RectTeam.Blue 
-            {
-                ballPosition.z = -ballPosition.z;
-            }
+            ballPosition = this.transform.InverseTransformPoint(area.ball.transform.position);
         }
         // Debug.Log("ballPosition for " + this.gameObject.name + " is " + ballPosition.ToString());
         sensor.AddObservation( ballPosition );
         
         // net position relative to agent
-        sensor.AddObservation( this.transform.parent.position - this.transform.position );
+        sensor.AddObservation( this.transform.InverseTransformPoint(this.transform.parent.position) );
 
         // agent y rotation ( depends on team )
         Quaternion inputRotation = this.transform.localRotation;
         if ( team == RectTeam.Blue)
         {
-            inputRotation *= Quaternion.Euler(0, 180, 0);
+            inputRotation *= Quaternion.Euler(0, -180, 0);
         }
         sensor.AddObservation( inputRotation );
 
         // friendlyAgent position
-        sensor.AddObservation( friendlyAgent.transform.position.x - this.transform.position.x );
-        sensor.AddObservation( friendlyAgent.transform.position.z - this.transform.position.z );
+        Vector3 friendlyAgentPos = this.transform.InverseTransformPoint( friendlyAgent.transform.position );
+        sensor.AddObservation( friendlyAgentPos.x );
+        sensor.AddObservation( friendlyAgentPos.z );
 
         // enemyAgent1 position
-        sensor.AddObservation( enemyAgent1.transform.position.x - this.transform.position.x );
-        sensor.AddObservation( enemyAgent1.transform.position.z - this.transform.position.z );
+        Vector3 enemyAgent1Pos = this.transform.InverseTransformPoint( enemyAgent1.transform.position );
+        sensor.AddObservation( enemyAgent1Pos.x );
+        sensor.AddObservation( enemyAgent1Pos.z );
 
         // enemyAgent2 position
-        sensor.AddObservation( enemyAgent2.transform.position.x - this.transform.position.x );
-        sensor.AddObservation( enemyAgent2.transform.position.z - this.transform.position.z );
+        Vector3 enemyAgent2Pos = this.transform.InverseTransformPoint( enemyAgent2.transform.position );
+        sensor.AddObservation( enemyAgent2Pos.x );
+        sensor.AddObservation( enemyAgent2Pos.z );
+
     }
 
     public void MoveAgent(float[] act)
