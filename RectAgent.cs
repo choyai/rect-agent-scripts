@@ -127,7 +127,7 @@ public class RectAgent : Agent
         // net position relative to agent
         Vector3 netPosition = this.transform.InverseTransformPoint(this.transform.parent.position);
         sensor.AddObservation( netPosition );
-        Debug.Log("net position relative to " + this.gameObject.name + " is " + ballPosition.ToString())
+        Debug.Log("net position relative to " + this.gameObject.name + " is " + ballPosition.ToString());
 
         // agent y rotation ( depends on team )
         Quaternion inputRotation = this.transform.localRotation;
@@ -142,7 +142,7 @@ public class RectAgent : Agent
         Vector3 friendlyAgentPos = this.transform.InverseTransformPoint( friendlyAgent.transform.position );
         sensor.AddObservation( friendlyAgentPos.x );
         sensor.AddObservation( friendlyAgentPos.z );
-        Debug.Log(" friendlyAgent position relative to " + this.gameObject.name + " is " + friendlyAgentPos.ToString())
+        Debug.Log(" friendlyAgent position relative to " + this.gameObject.name + " is " + friendlyAgentPos.ToString());
         // enemyAgent1 position
         Vector3 enemyAgent1Pos = this.transform.InverseTransformPoint( enemyAgent1.transform.position );
         sensor.AddObservation( enemyAgent1Pos.x );
@@ -152,7 +152,7 @@ public class RectAgent : Agent
         Vector3 enemyAgent2Pos = this.transform.InverseTransformPoint( enemyAgent2.transform.position );
         sensor.AddObservation( enemyAgent2Pos.x );
         sensor.AddObservation( enemyAgent2Pos.z );
-        Debug.Log(" enemyAgent2 position relative to " + this.gameObject.name + " is " + enemyAgent2Pos.ToString())
+        Debug.Log(" enemyAgent2 position relative to " + this.gameObject.name + " is " + enemyAgent2Pos.ToString());
 
     }
 
