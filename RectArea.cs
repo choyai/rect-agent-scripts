@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Assertions;
 
 [System.Serializable]
 public class RectState
@@ -85,7 +86,13 @@ public class RectArea : MonoBehaviour
         {
             Vector3 direction = ballRb.transform.position - ps.agentRb.transform.position;
             direction.Normalize();
-            ps.agentScript.contactPoint.transform.position = 2f * direction + ps.agentRb.transform.position;
+            Vector3 contactPoint = 4f * direction + ps.agentRb.transform.position;
+            ps.agentScript.contactPoint.transform.position = contactPoint;
+
+            Vector3 landingPoint = ComputeLandingPoint( ps.agentScript, contactPoint );
+
+            ps.agentScript.projectedTarget.transform.position = landingPoint;
+
         }
     }
 
@@ -325,7 +332,7 @@ public class RectArea : MonoBehaviour
 
             //  may need to determine the pitch angle of the ball via input, as gameplay is too hard otherwise...
 
-            Vector3 localVelocity = new Vector3(15f, 10f, 0f);
+            Vector3 localVelocity = new Vector3(16f, 13f, 0f);
             //Debug.Log("team = " + agent.team.ToString() );
             //Debug.Log("localVelocity = " + localVelocity.ToString() );
             Vector3 worldVelocity = agent.transform.TransformVector(localVelocity);
@@ -348,14 +355,41 @@ public class RectArea : MonoBehaviour
         Vector3 direction = ball.transform.position - agent.transform.position;
         var distance = direction.magnitude;
         // Debug.Log(distance);
-        if( distance < 2f && !recentlyServed)
+        if( distance < 4f && !recentlyServed)
         {
             // Debug.Log("hitting");
             // calculate the hit direction
             direction.Normalize();
-            ballRb.velocity = 18f * direction;
+            ballRb.velocity = agent.hitPower * direction;
             prevTouchedTeam = agent.team;
             // Debug.Log(30f * direction);
         }
+    }
+
+    // Computes where to place the aim assist tool
+    Vector3 ComputeLandingPoint( RectAgent agent, Vector3 contactPoint )
+    {
+        if( ballRb.position.y < 2f)
+        {
+            return agent.transform.position;
+        }
+
+        Vector3 initialVelocity = contactPoint - agent.transform.position;
+        
+        initialVelocity.Normalize();
+
+        initialVelocity *= agent.hitPower;
+
+        // TODO: Check for net collision
+        // Basic ballistics
+        float timeToFloor;
+        timeToFloor = initialVelocity.y / (float) Physics.gravity.magnitude + Mathf.Sqrt(initialVelocity.y * initialVelocity.y / (Physics.gravity.magnitude * Physics.gravity.magnitude) - 4f * ballRb.position.y / Physics.gravity.magnitude );
+        //float timeToNet 
+        // Debug.Log("timeToFloor = " + timeToFloor.ToString());
+        Vector3 landingPoint = timeToFloor * initialVelocity;
+
+        // Assert.AreApproximatelyEqual( 0.0f, landingPoint.y);
+        
+        return agent.transform.position;
     }
 }
