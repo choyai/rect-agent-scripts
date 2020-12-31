@@ -207,11 +207,14 @@ public class RectArea : MonoBehaviour
             if (ps.agentScript.team == scoredTeam)
             {
                 reward = 1 + ps.agentScript.timePenalty;
+                reward += ps.agentScript.totalHitReward;
             }
             else
             {
                 reward = Mathf.Clamp(-0.5f + ps.agentScript.timePenalty, -1, 0);
+                reward += ps.agentScript.totalHitReward;
             }
+            ps.agentScript.totalHitReward = 0f;
             ps.agentScript.AddReward(reward);
             // Debug.Log("Reward = " + reward.ToString());
             ps.agentScript.EndEpisode();  //all agents need to be reset
@@ -362,6 +365,7 @@ public class RectArea : MonoBehaviour
             direction.Normalize();
             ballRb.velocity = agent.hitPower * direction;
             prevTouchedTeam = agent.team;
+            agent.totalHitReward += agent.m_HitReward;
             // Debug.Log(30f * direction);
         }
     }

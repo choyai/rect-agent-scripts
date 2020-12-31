@@ -25,6 +25,10 @@ public class RectAgent : Agent
     public float hitPower = 20f;
     float m_ExistentialReward;
     float m_OutOfBoundsReward;
+
+    public float totalHitReward;
+
+    public float m_HitReward;
     float m_LateralSpeed;
     float m_ForwardSpeed;
 
@@ -54,6 +58,8 @@ public class RectAgent : Agent
         // fuck you mlagents team
         m_ExistentialReward = 1f / 1000000f;
         m_OutOfBoundsReward = 1f / 10000f;
+        totalHitReward = 0f;
+        m_HitReward = 0.05f;
         m_BehaviorParameters = gameObject.GetComponent<BehaviorParameters>();
         if (m_BehaviorParameters.TeamId == (int)RectTeam.Blue)
         {
