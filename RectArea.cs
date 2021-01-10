@@ -1,10 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Assertions;
 
+//  invalid playerStates exception class
+public class InvalidPlayerStatesException : Exception
+{
+    public InvalidPlayerStatesException( string message ): base( message ){
+    }
+}
+//  RectState contains information about each agent to
+//  be used by RectArea
 [System.Serializable]
 public class RectState
 {
@@ -17,20 +26,27 @@ public class RectState
     public bool isServing = false;
 }
 
+//  RectArea Class
 public class RectArea : MonoBehaviour
 {
+    // The Game Phase
     public enum GamePhase
     {
         Start = 0,
         Play = 1
     }
+
     public GameObject ball;
     public GamePhase phase;
+    
     [FormerlySerializedAs("ballRB")]
     [HideInInspector]
     public Rigidbody ballRb;
+    
     // public GameObject ground;
     // public GameObject centerPitch;
+
+    //  ball controller script    
     BallController m_BallController;
     public List<RectState> playerStates = new List<RectState>();
     [HideInInspector]
@@ -43,13 +59,16 @@ public class RectArea : MonoBehaviour
     public Vector3 ballVelocity;
 
     float serviceCooldown = 0.7f;
-    bool recentlyServed = false;
+    bool recentlyServed = false;0
 
     System.Random randall = new System.Random();
 
     RectAgent.RectTeam prevScoredTeam;
 
     public RectAgent.RectTeam prevTouchedTeam;
+
+
+    public int prevTouchedAgentId;
 
     EnvironmentParameters m_ResetParams;
 
@@ -62,6 +81,7 @@ public class RectArea : MonoBehaviour
     {
         if( timerRunning )
         {
+
             motionTimer += Time.deltaTime;
 
             if( ballRb.velocity.magnitude > Mathf.Epsilon )
@@ -99,10 +119,15 @@ public class RectArea : MonoBehaviour
     void Awake()
     {
         canResetBall = true;
+
         if (goalTextUI) { goalTextUI.SetActive(false); }
+        
+        //  set ball attrs
         ballRb = ball.GetComponent<Rigidbody>();
+        //  set the ball's area attr as this rectArea
         m_BallController = ball.GetComponent<BallController>();
         m_BallController.area = this;
+        
         ballStartingPos = ball.transform.position;
 
         System.Random rnd = new System.Random();
@@ -148,7 +173,6 @@ public class RectArea : MonoBehaviour
             }
             else
             {
-
                 ps.agentScript.isServing = false;
             }
         }
@@ -171,6 +195,7 @@ public class RectArea : MonoBehaviour
         if (goalTextUI) goalTextUI.SetActive(false);
     }
 
+    //  handles scoring
     public void GoalTouched(RectAgent.RectTeam scoredTeam)
     {
         GiveReward(scoredTeam);
@@ -344,6 +369,7 @@ public class RectArea : MonoBehaviour
             agent.isServing = false;
             this.phase = GamePhase.Play;
             prevTouchedTeam = agent.team;
+            prevTouchedAgentId = getAgentID(agent);
             StartCoroutine( serviceCooldownTimer() );
         }
     }
@@ -362,6 +388,7 @@ public class RectArea : MonoBehaviour
             direction.Normalize();
             ballRb.velocity = agent.hitPower * direction;
             prevTouchedTeam = agent.team;
+            prevTouchedAgentId = getAgentID(agent);
             // Debug.Log(30f * direction);
         }
     }
@@ -369,7 +396,7 @@ public class RectArea : MonoBehaviour
     // Computes where to place the aim assist tool
     Vector3 ComputeLandingPoint( RectAgent agent, Vector3 contactPoint )
     {
-        if( ballRb.position.y < 2f)
+        if( ballRb.position - agent.transform.position < 2f)
         {
             return agent.transform.position;
         }
@@ -392,4 +419,16 @@ public class RectArea : MonoBehaviour
         
         return agent.transform.position;
     }
+
+    //  utility
+    int getAgentID( RectAgent agent )
+    {
+        return playerStates.Where( p => p.agentScript == agent ).First();
+    }
+
+    RectAgent getAgentByID( int id )
+    {
+        return playerStates.Where( p => p.playerIndex == id ).First();
+    }
+
 }
