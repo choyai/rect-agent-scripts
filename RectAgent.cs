@@ -97,8 +97,9 @@ public class RectAgent : Agent
         if ( Mathf.Abs(transform.localPosition.x) > 15 ||
              Mathf.Abs(transform.localPosition.z) > 20 )
         {
-            area.OutOfBounds(this.team);
 
+            area.OutOfBounds(this.team);
+        
         }
 
         if( Mathf.Abs(transform.localPosition.x) > 5f ||
