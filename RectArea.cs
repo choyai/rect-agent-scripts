@@ -59,7 +59,7 @@ public class RectArea : MonoBehaviour
     public Vector3 ballVelocity;
 
     float serviceCooldown = 0.7f;
-    bool recentlyServed = false;0
+    bool recentlyServed = false;
 
     System.Random randall = new System.Random();
 
@@ -400,7 +400,7 @@ public class RectArea : MonoBehaviour
     // Computes where to place the aim assist tool
     Vector3 ComputeLandingPoint( RectAgent agent, Vector3 contactPoint )
     {
-        if( ballRb.position - agent.transform.position < 2f)
+        if( (ballRb.position - agent.transform.position).magnitude < 2f)
         {
             return agent.transform.position;
         }
@@ -427,12 +427,14 @@ public class RectArea : MonoBehaviour
     //  utility
     int getAgentID( RectAgent agent )
     {
-        return playerStates.Where( p => p.agentScript == agent ).First();
+        RectState ps = playerStates.Find( p => p.agentScript == agent );
+        return ps.playerIndex;
     }
 
     RectAgent getAgentByID( int id )
     {
-        return playerStates.Where( p => p.playerIndex == id ).First();
+        RectState ps =  playerStates.Find( p => p.playerIndex == id );
+        return ps.agentScript;
     }
 
 }
