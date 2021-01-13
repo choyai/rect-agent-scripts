@@ -61,6 +61,9 @@ public class RectArea : MonoBehaviour
     float serviceCooldown = 0.7f;
     bool recentlyServed = false;
 
+    float hitCooldown = 0.1f;
+    bool recentlyHit = false;
+
     System.Random randall = new System.Random();
 
     RectAgent.RectTeam prevScoredTeam;
@@ -186,6 +189,13 @@ public class RectArea : MonoBehaviour
         recentlyServed = true;
         yield return new WaitForSeconds(serviceCooldown);
         recentlyServed = false;
+    }
+
+    public IEnumerator hitCooldownTimer()
+    {
+        recentlyHit = true;
+        yield return new WaitForSeconds(hitCooldown);
+        recentlyHit = false;
     }
 
     IEnumerator ShowGoalUI()
@@ -384,7 +394,7 @@ public class RectArea : MonoBehaviour
         Vector3 direction = ball.transform.position - agent.transform.position;
         var distance = direction.magnitude;
         // Debug.Log(distance);
-        if( distance < 4f && !recentlyServed)
+        if( distance < 4f && !recentlyServed )
         {
             // Debug.Log("hitting");
             // calculate the hit direction
@@ -395,10 +405,11 @@ public class RectArea : MonoBehaviour
             prevTouchedAgentId = getAgentID(agent);
             // Debug.Log(30f * direction);
         }
-        if( getAgentID( agent ) == prevTouchedAgentId )
+        if( getAgentID( agent ) == prevTouchedAgentId && !recentlyServed && !recentlyHit)
         {
             OutOfBounds( agent.team );
         }
+        StartCoroutine( hitCooldownTimer() );
     }
 
     // Computes where to place the aim assist tool
