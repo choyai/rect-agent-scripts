@@ -395,6 +395,10 @@ public class RectArea : MonoBehaviour
             prevTouchedAgentId = getAgentID(agent);
             // Debug.Log(30f * direction);
         }
+        if( getAgentID( agent ) == prevTouchedAgentId )
+        {
+            OutOfBounds( agent.team );
+        }
     }
 
     // Computes where to place the aim assist tool
